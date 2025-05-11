@@ -3,6 +3,7 @@
 #include <OBSE/OBSE.h>
 #include <REX/REX.h>
 #include <cstdint>
+#include <windows.h>
 
 namespace CommandsInput {
 

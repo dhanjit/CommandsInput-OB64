@@ -1,15 +1,17 @@
 #include "pch.h"
 #include "KeyPress.h"
 #include <OBSE/OBSE.h>
+#include <OBSE/CommandTable.h>
+#include <OBSE/PluginAPI.h>
 #include <RE/Oblivion.h>
 
 namespace {
 
-bool IsKeyPressedPapyrus(RE::StaticFunctionTag*, std::uint32_t keyCode) {
+bool IsKeyPressedPapyrus(OBSE::StaticFunctionTag*, std::uint32_t keyCode) {
 	return CommandsInput::IsKeyPressed(keyCode);
 }
 
-bool IsKeyPressedExPapyrus(RE::StaticFunctionTag*, std::uint32_t keyCode, bool checkShift, bool checkCtrl, bool checkAlt) {
+bool IsKeyPressedExPapyrus(OBSE::StaticFunctionTag*, std::uint32_t keyCode, bool checkShift, bool checkCtrl, bool checkAlt) {
 	return CommandsInput::IsKeyPressedEx(keyCode, checkShift, checkCtrl, checkAlt);
 }
 
@@ -40,6 +42,7 @@ bool OBSEPlugin_Query(const OBSEInterface* obse, PluginInfo* info)
 OBSE_PLUGIN_LOAD(const OBSE::LoadInterface* obse) {
 	OBSE::Init(obse, { .trampoline = true, .trampolineSize = 64 });
 	RegisterPapyrusFunctions();
+	RegisterCommands();
 	REX::INFO("CommandsInput loaded");
 	return true;
 }
@@ -48,35 +51,35 @@ OBSE_PLUGIN_LOAD(const OBSE::LoadInterface* obse) {
 void RegisterCommands()
 {
 	// Register IsKeyPressed command
-	CommandInfo* cmdInfo = new CommandInfo;
+	OBSE::CommandInfo* cmdInfo = new OBSE::CommandInfo;
 	cmdInfo->longName = "IsKeyPressed";
 	cmdInfo->shortName = "ikp";
 	cmdInfo->helpText = "Checks if a key is currently pressed";
 	cmdInfo->isRefRequired = false;
 	cmdInfo->numParams = 1;
-	cmdInfo->params = new ParamInfo[1];
-	cmdInfo->params[0].type = kParamType_Integer;
+	cmdInfo->params = new OBSE::ParamInfo[1];
+	cmdInfo->params[0].type = OBSE::kParamType_Integer;
 	cmdInfo->params[0].name = "keyCode";
 	cmdInfo->params[0].isOptional = false;
 	
 	// Register IsKeyPressedEx command
-	CommandInfo* cmdInfoEx = new CommandInfo;
+	OBSE::CommandInfo* cmdInfoEx = new OBSE::CommandInfo;
 	cmdInfoEx->longName = "IsKeyPressedEx";
 	cmdInfoEx->shortName = "ikpe";
 	cmdInfoEx->helpText = "Checks if a key is pressed with optional modifier keys";
 	cmdInfoEx->isRefRequired = false;
 	cmdInfoEx->numParams = 4;
-	cmdInfoEx->params = new ParamInfo[4];
-	cmdInfoEx->params[0].type = kParamType_Integer;
+	cmdInfoEx->params = new OBSE::ParamInfo[4];
+	cmdInfoEx->params[0].type = OBSE::kParamType_Integer;
 	cmdInfoEx->params[0].name = "keyCode";
 	cmdInfoEx->params[0].isOptional = false;
-	cmdInfoEx->params[1].type = kParamType_Integer;
+	cmdInfoEx->params[1].type = OBSE::kParamType_Integer;
 	cmdInfoEx->params[1].name = "checkShift";
 	cmdInfoEx->params[1].isOptional = true;
-	cmdInfoEx->params[2].type = kParamType_Integer;
+	cmdInfoEx->params[2].type = OBSE::kParamType_Integer;
 	cmdInfoEx->params[2].name = "checkCtrl";
 	cmdInfoEx->params[2].isOptional = true;
-	cmdInfoEx->params[3].type = kParamType_Integer;
+	cmdInfoEx->params[3].type = OBSE::kParamType_Integer;
 	cmdInfoEx->params[3].name = "checkAlt";
 	cmdInfoEx->params[3].isOptional = true;
 }
