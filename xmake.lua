@@ -28,7 +28,7 @@ target("CommandsInput")
     -- add commonlibsse plugin
     add_rules("commonlibob64.plugin", {
         name = "CommandsInput",
-        author = "Your Name",
+        author = "dhanjit",
         description = "OBSE64 plugin that provides key press detection functionality"
     })
 
