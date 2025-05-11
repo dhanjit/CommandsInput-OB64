@@ -5,8 +5,8 @@ set_xmakever("2.8.2")
 includes("lib/commonlibob64")
 
 -- set project
-set_project("commonlibob64-template")
-set_version("0.0.0")
+set_project("CommandsInput")
+set_version("1.0.0")
 set_license("GPL-3.0")
 
 -- set defaults
@@ -21,15 +21,15 @@ add_rules("mode.debug", "mode.releasedbg")
 add_rules("plugin.vsxmake.autoupdate")
 
 -- targets
-target("commonlibob64-template")
+target("CommandsInput")
     -- add dependencies to target
     add_deps("commonlibob64")
 
     -- add commonlibsse plugin
     add_rules("commonlibob64.plugin", {
-        name = "commonlibob64-template",
-        author = "qudix",
-        description = "OBSE plugin template using CommonLibOB64"
+        name = "CommandsInput",
+        author = "Your Name",
+        description = "OBSE64 plugin that provides key press detection functionality"
     })
 
     -- add src files
@@ -37,3 +37,33 @@ target("commonlibob64-template")
     add_headerfiles("src/**.h")
     add_includedirs("src")
     set_pcxxheader("src/pch.h")
+
+    -- add flags
+    add_cxxflags("/EHsc", "/permissive-")
+
+    -- add flags (cl)
+    add_cxxflags(
+        "cl::/bigobj",
+        "cl::/cgthreads8",
+        "cl::/diagnostics:caret",
+        "cl::/external:W0",
+        "cl::/fp:contract",
+        "cl::/fp:except-",
+        "cl::/guard:cf-",
+        "cl::/Zc:preprocessor",
+        "cl::/Zc:templateScope"
+    )
+
+    -- add flags (cl: disable warnings)
+    add_cxxflags(
+        "cl::/wd4200", -- nonstandard extension used : zero-sized array in struct/union
+        "cl::/wd4201", -- nonstandard extension used : nameless struct/union
+        "cl::/wd4324", -- structure was padded due to alignment specifier
+        { public = true }
+    )
+
+    -- add flags (cl: warnings -> errors)
+    add_cxxflags(
+        "cl::/we4715", -- not all control paths return a value
+        { public = true }
+    )
